@@ -7,7 +7,6 @@ import httplib
 import time
 import StringIO
 
-from naoqi import ALProxy
 try:
     from naoqi import ALModule
     from naoqi import ALProxy
