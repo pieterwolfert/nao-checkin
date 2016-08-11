@@ -21,14 +21,14 @@ except ImportError, err:
 NAO_IP = '131.174.106.197'
 
 class NaoWitSpeech(ALModule):
-    def __init__( self, strName, args):
+    def __init__( self, strName):
         """
         Writing audio to temporary file.
         """
         ALModule.__init__( self, strName );
         self.saveFile = StringIO.StringIO()
         try :
-            self.ALAudioDevice = ALProxy("ALAudioDevice", args.IP, args.PORT)
+            self.ALAudioDevice = ALProxy("ALAudioDevice")
         except Exception, e:
             print "Error when creating proxy on ALAudioDevice:"
             print str(e)
@@ -36,16 +36,20 @@ class NaoWitSpeech(ALModule):
         channels = [0,1,0,0]
         isDeinterleaved = False
         isTimeStampped = True # in fact this parameter is not read. Time stamps are always calculated.
-        self.ALAudioDevice.setClientPreferences(self.getName(), args.rate, channels, 0, 0)
+        self.ALAudioDevice.setClientPreferences(self.getName(), 48000, channels, 0, 0)
 
     def startAudioTest(self, duration):
         """
         Subscribe for audio data.
         """
         self.startWit()
+        spr = ALProxy("ALAudioPlayer")
+        spr.playFile("/usr/share/naoqi/wav/begin_reco.wav")
         self.ALAudioDevice.subscribe(self.getName())
         time.sleep(duration)
+        spr.playFile("/usr/share/naoqi/wav/end_reco.wav")
         self.ALAudioDevice.unsubscribe(self.getName())
+        print "stop"
         self.startUpload(self.saveFile)
 
     def startUpload(self, datafile):
@@ -56,6 +60,7 @@ class NaoWitSpeech(ALModule):
         conn.request("POST", "/speech", datafile.getvalue(), self.headers)
         response = conn.getresponse()
         data = response.read()
+        self.reply = data
         print data
 
     def process(self, nbOfInputChannels, nbOfInputSamples, timeStamp, inputBuff):
@@ -93,5 +98,6 @@ if __name__ == "__main__":
     args.rate = int(args.rate)
     args.PORT = int(args.PORT)
     pythonBroker = ALBroker("pythonBroker", "0.0.0.0", 9600, args.IP, args.PORT)
-    NaoWit = NaoWitSpeech("NaoWit",args)
+    global NaoWit
+    NaoWit = NaoWitSpeech("NaoWit")
     NaoWit.startAudioTest(3)
