@@ -4,6 +4,8 @@ import ast
 from TouchEvent import ReactToTouch
 from SpeechRecognition import SpeechRecognition
 from NaoWitSpeech import NaoWitSpeech
+from NaoBreakfast import NaoBreakfast
+from NaoCheckin import NaoCheckin
 import argparse
 import time
 
@@ -54,36 +56,32 @@ def main(args):
     startAwareness()
     sayWelcome() #say welcome, ask if person wants to be checked in
     makeSpeech()
-    getResponse(["breakfast", "checkin", "pay", "checkout", "reservation"], True)
-    choice = Speecher.value
-    choice = choice[0].strip('<>. ')
-    if "breakfast" in choice:
-        tts.say("I heard you would like breakfast, you can pay with card at the counter.")
-    elif "checkin" in choice:
-        tts.say("I will check you in, do you have your reservation number?")
-    elif "pay" in choice:
-        tts.say("You can pay at the counter with your card.")
     global NaoWit
     NaoWit = NaoWitSpeech("NaoWit")
-    NaoWit.startAudioTest(3)
-    roomnumber = ast.literal_eval(NaoWit.reply)
-    roomnumber = roomnumber['_text']
-    tts.say("I've got your number.")
-    room = "Your number is " + roomnumber
-    tts.say(room)
-    tts.say("Would you like to have more information about this hotel?")
-    getResponse(["yes", "no"], False)
-    choice = Speecher.value
-    choice = choice[0].strip('<>. ')
-    if "yes" in choice:
-        tts.say("This hotel is established in 2016")
-        tts.say("My master is Louis Vuurpile")
-    elif "no" in choice:
-        tts.say("Okay, bye")
-
+    end = False
+    while end is False:
+        tts.say("What would you like to do?")
+        getResponse(["breakfast", "checkin", "pay", "checkout", "reservation", "stop", "information", "pizza"], True)
+        choice = Speecher.value
+        choice = choice[0].strip('<>. ')
+        if "breakfast" in choice:
+            nbr = NaoBreakfast(tts, Speecher)
+        elif "checkin" in choice:
+            nci = NaoCheckin(tts, NaoWit)
+        elif "pay" in choice:
+            tts.say("You can pay at the counter with your card.")
+        elif "stop" in choice:
+            tts.say("Thank you for choosing me!")
+            end = True
+            awe.stopAwareness()
+        elif "information" in choice:
+            tts.say("This hotel is established in 2016")
+            tts.say("My master is Louis Vuurpile")
+        elif "pizza" in choice:
+            tts.say("I will order a pizza doner now, it will be delivered in Nijmegen")
 
 if __name__ == "__main__":
-    NAO_IP = "131.174.106.197"
+    NAO_IP = "131.174.106.223"
     parser = argparse.ArgumentParser()
     parser.add_argument("--pip",
                       help="IP adress of the robot",
