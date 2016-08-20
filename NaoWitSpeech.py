@@ -82,7 +82,7 @@ class NaoWitSpeech(ALModule):
         """
         Method for creating the call to wit.ai, change bearer to own API KeyboardInterrupt
         """
-        self.headers = {'Authorization': 'Bearer 4KQMHH5QWJDMD7QSOM4RLDRFJ7Q6HALP'}
+        self.headers = {'Authorization': 'Bearer *OWN API CODE*'}
         self.headers['Content-Type'] = 'audio/raw;encoding=signed-integer;bits=16;rate=48000;endian=little'
 
 if __name__ == "__main__":
