@@ -6,10 +6,14 @@ from naoqi import ALBroker
 from naoqi import ALModule
 import argparse
 
-
-#Code is taken from aldebaran API documentation
 ReactToTouch = None
 memory = None
+
+"""
+Code partly belongs to aldebaran.
+Don't forget to first make a broker to NAOQI.
+After that an object can be made, if touched self.touched changes to True
+"""
 
 class ReactToTouch(ALModule):
     """ A simple module able to react

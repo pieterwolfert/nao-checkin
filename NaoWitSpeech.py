@@ -21,6 +21,10 @@ except ImportError, err:
 NAO_IP = '131.174.106.197'
 
 class NaoWitSpeech(ALModule):
+    """
+    NAO Module which can interact with wit.ai, for natural speech processing,
+    can be run directly onto the NAO (that's probably faster)
+    """
     def __init__( self, strName):
         """
         Writing audio to temporary file.
@@ -65,6 +69,7 @@ class NaoWitSpeech(ALModule):
 
     def process(self, nbOfInputChannels, nbOfInputSamples, timeStamp, inputBuff):
         #just in case you want to run this locally on the NAO
+        #process is only called when ran locally on the NAO
         self.processRemote(self, nbOfInputChannels, nbOfInputSamples, timeStamp, inputBuff)
 
     def processRemote(self, nbOfInputChannels, nbOfInputSamples, timeStamp, inputBuff):
@@ -74,6 +79,9 @@ class NaoWitSpeech(ALModule):
         self.saveFile.write(inputBuff)
 
     def startWit(self):
+        """
+        Method for creating the call to wit.ai, change bearer to own API KeyboardInterrupt
+        """
         self.headers = {'Authorization': 'Bearer 4KQMHH5QWJDMD7QSOM4RLDRFJ7Q6HALP'}
         self.headers['Content-Type'] = 'audio/raw;encoding=signed-integer;bits=16;rate=48000;endian=little'
 

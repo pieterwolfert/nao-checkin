@@ -3,6 +3,10 @@ import time
 
 class NaoBreakfast:
     def __init__(self, tts, Speecher):
+        """
+        Example of behavior object, asks subject which breakfast it would like.
+        Uses build in speech recognition.
+        """
         self.Speecher = Speecher
         tts.say("I heard you would like breakfast, what type of breakfast would you like?")
         self.getResponse(["options", "english", "continental"], True)
@@ -21,6 +25,9 @@ class NaoBreakfast:
 
 
     def getResponse(self, wordlist, wordspotting):
+        """
+        Gets speech response, waits till response is there. 
+        """
         self.Speecher.getSpeech(wordlist, wordspotting)
         try:
             while self.Speecher.response is False:

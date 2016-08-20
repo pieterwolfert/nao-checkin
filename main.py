@@ -10,6 +10,9 @@ import argparse
 import time
 
 def waitTouch():
+    """
+    NAO responds when any of the touchable areas is activated.
+    """
     global ReactToTouch
     ReactToTouch = ReactToTouch("ReactToTouch")
     try:
@@ -22,23 +25,39 @@ def waitTouch():
         sys.exit(0)
 
 def startAwareness():
+    """
+    Basic awareness with face tracking, fully engaged with the person talking,
+    to the NAO.
+    """
     global awe
     awe = ALProxy("ALBasicAwareness")
     awe.setEngagementMode("FullyEngaged")
     awe.startAwareness()
 
 def sayWelcome():
+    """
+    Welcome method.
+    """
     global tts
     tts = ALProxy("ALAnimatedSpeech")
     tts.say("Welcome to Louis his hotel.")
     tts.say("It would be very helpful of you to give clear answers.")
-    tts.say("What would you like to do?")
 
 def makeSpeech():
+    """
+    Makes speecher object, is globally accesible within all modules.
+    """
     global Speecher
     Speecher = SpeechRecognition("Speecher")
 
 def getResponse(wordlist, wordspotting):
+    """
+    Speech recognition method for getting a response.
+
+    Args:
+    - wordlist (give a list of words to recognize)
+    - wordspotting (either True or False, can recognize words within sentences)
+    """
     Speecher.getSpeech(wordlist, wordspotting)
     try:
         while Speecher.response is False:
@@ -61,7 +80,8 @@ def main(args):
     end = False
     while end is False:
         tts.say("What would you like to do?")
-        getResponse(["breakfast", "checkin", "pay", "checkout", "reservation", "stop", "information", "pizza"], True)
+        getResponse(["breakfast", "checkin", "pay", "checkout",
+                    "reservation", "stop", "information", "pizza"], True)
         choice = Speecher.value
         choice = choice[0].strip('<>. ')
         if "breakfast" in choice:
@@ -78,10 +98,11 @@ def main(args):
             tts.say("This hotel is established in 2016")
             tts.say("My master is Louis Vuurpile")
         elif "pizza" in choice:
-            tts.say("I will order a pizza doner now, it will be delivered in Nijmegen")
+            tts.say("I will order a pizza doner now,\
+                    it will be delivered in Nijmegen")
 
 if __name__ == "__main__":
-    NAO_IP = "131.174.106.223"
+    NAO_IP = "10.0.1.6"
     parser = argparse.ArgumentParser()
     parser.add_argument("--pip",
                       help="IP adress of the robot",

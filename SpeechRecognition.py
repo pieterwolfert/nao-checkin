@@ -4,7 +4,10 @@ from naoqi import ALModule
 import pdb
 import time
 
-
+"""
+SpeechRecognition module, uses speech from naoqi
+See main part for detailed instructions.
+"""
 class SpeechRecognition(ALModule):
     """To make it easier to use NaoQI proxies.
     """
@@ -18,6 +21,9 @@ class SpeechRecognition(ALModule):
         self.spr = ALProxy("ALSpeechRecognition")
 
     def getSpeech(self, wordlist, wordspotting):
+        """
+        Starts speech recording
+        """
         self.response = False
         self.value = []
         self.spr.setVocabulary(wordlist, wordspotting)
@@ -25,7 +31,7 @@ class SpeechRecognition(ALModule):
 
     def onDetect(self, eventname, value, subscriber):
         """
-        Should bind now
+        Called when a word is spotted, resets values so it can be used again.
         """
         self.response = True
         self.value = value
